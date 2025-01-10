@@ -28,17 +28,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.baimon.kmp.data.database.TaskDatabase
+import org.baimon.kmp.domain.task.usecase.GetAllTaskUseCase
+import org.baimon.kmp.domain.task.usecase.UpdateCheckTaskUseCase
 import org.baimon.kmp.presentation.widgets.TodoTaskItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoMainScreen(
-    database: TaskDatabase,
+    getAllTaskUseCase: GetAllTaskUseCase,
+    updateCheckTaskUseCase: UpdateCheckTaskUseCase,
     onNavigateToNewTask: () -> Unit
 ) {
 
-    val viewModel: TodoMainViewModel = viewModel { TodoMainViewModel(database) }
+    val viewModel: TodoMainViewModel =
+        viewModel { TodoMainViewModel(getAllTaskUseCase, updateCheckTaskUseCase) }
     val todoList by viewModel.todoList.collectAsState()
     val loading by viewModel.loading.collectAsState()
 
@@ -78,19 +81,19 @@ fun TodoMainScreen(
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier.padding(innerPadding),
-            contentPadding = PaddingValues(16.dp),
+            contentPadding = PaddingValues(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 60.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
                 Text(text = "Todo Task", style = MaterialTheme.typography.titleLarge)
             }
-            items(todoList, key = { todo -> todo.id }) {
+            items(todoList, key = { todo -> todo.id ?: todo.title }) {
                 TodoTaskItem(
                     isCheck = it.isCheck,
                     titleText = it.title,
                     descriptionText = it.description,
                     onCheckChange = { check ->
-                        viewModel.check(it.id, check)
+                        viewModel.check(it.id ?: 0, check)
                     },
                 )
             }

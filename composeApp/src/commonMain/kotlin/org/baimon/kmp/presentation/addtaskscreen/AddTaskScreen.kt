@@ -28,16 +28,16 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.baimon.kmp.data.database.TaskDatabase
+import org.baimon.kmp.domain.task.usecase.AddTaskUseCase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTaskScreen(
-    database: TaskDatabase,
+    addTaskUseCase: AddTaskUseCase,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
 
-    val viewModel: AddTaskViewModel = viewModel { AddTaskViewModel(database) }
+    val viewModel: AddTaskViewModel = viewModel { AddTaskViewModel(addTaskUseCase) }
     val title by viewModel.title.collectAsState()
     val description by viewModel.description.collectAsState()
     val isInputComplete by viewModel.isInputComplete.collectAsState()

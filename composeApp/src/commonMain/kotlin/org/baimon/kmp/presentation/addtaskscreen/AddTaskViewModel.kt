@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
-import org.baimon.kmp.data.database.TaskDatabase
-import org.baimon.kmp.data.database.TaskEntity
+import org.baimon.kmp.domain.task.model.Task
+import org.baimon.kmp.domain.task.usecase.AddTaskUseCase
 
 class AddTaskViewModel(
-    private val database: TaskDatabase
+    private val addTaskUseCase: AddTaskUseCase
 ) : ViewModel() {
     private val _title = MutableStateFlow<String>("")
     val title: StateFlow<String> = _title.asStateFlow()
@@ -48,8 +48,8 @@ class AddTaskViewModel(
     fun updateTask() {
         viewModelScope.launch {
             flowOf(
-                database.taskDao().insertTask(
-                    TaskEntity(
+                addTaskUseCase.execute(
+                    Task(
                         title = _title.value,
                         description = _description.value,
                         isCheck = false
