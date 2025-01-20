@@ -5,9 +5,12 @@ import androidx.compose.runtime.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.room.RoomDatabase
 import kotlinx.serialization.Serializable
 import org.baimon.kmp.data.database.TaskDatabase
+import org.baimon.kmp.data.database.getDatabase
 import org.baimon.kmp.data.task.TaskRepositoryImpl
+import org.baimon.kmp.domain.task.model.Task
 import org.baimon.kmp.domain.task.usecase.AddTaskUseCase
 import org.baimon.kmp.domain.task.usecase.GetAllTaskUseCase
 import org.baimon.kmp.domain.task.usecase.UpdateCheckTaskUseCase
@@ -18,10 +21,14 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 @Preview
 fun App(
-    taskDatabase: TaskDatabase
+    taskDatabaseBuilder: RoomDatabase.Builder<TaskDatabase>
 ) {
     MaterialTheme {
         val navController = rememberNavController()
+
+        val taskDatabase = remember {
+            getDatabase(taskDatabaseBuilder)
+        }
 
         val taskRepository = remember {
             TaskRepositoryImpl(

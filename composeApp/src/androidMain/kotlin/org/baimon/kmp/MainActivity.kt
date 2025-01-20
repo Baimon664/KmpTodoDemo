@@ -6,14 +6,14 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
-import org.baimon.kmp.data.database.getTaskDatabase
+import org.baimon.kmp.data.database.getTaskDatabaseBuilder
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val database = remember {
-                getTaskDatabase(this)
+                getTaskDatabaseBuilder(this)
             }
             App(database)
         }

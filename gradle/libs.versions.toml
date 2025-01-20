@@ -18,7 +18,7 @@ kotlinxSerializationJson = "1.8.0"
 lifecycleViewmodelCompose = "2.8.2"
 navigationCompose = "2.8.0-alpha10"
 room = "2.7.0-alpha12"
-sqlite = "2.5.0-alpha01"
+sqlite = "2.5.0-alpha012"
 ksp = "2.1.0-1.0.29"
 
 [libraries]
