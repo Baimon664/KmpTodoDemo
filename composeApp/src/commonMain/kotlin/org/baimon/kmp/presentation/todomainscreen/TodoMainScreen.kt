@@ -28,28 +28,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.baimon.kmp.domain.task.usecase.GetAllTaskUseCase
-import org.baimon.kmp.domain.task.usecase.UpdateCheckTaskUseCase
+import org.baimon.kmp.database.TaskDatabase
 import org.baimon.kmp.presentation.widgets.TodoTaskItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoMainScreen(
-    getAllTaskUseCase: GetAllTaskUseCase,
-    updateCheckTaskUseCase: UpdateCheckTaskUseCase,
+    taskDatabase: TaskDatabase,
     onNavigateToNewTask: () -> Unit
 ) {
 
     val viewModel: TodoMainViewModel =
-        viewModel { TodoMainViewModel(getAllTaskUseCase, updateCheckTaskUseCase) }
-    val todoList by viewModel.todoList.collectAsState()
-    val loading by viewModel.loading.collectAsState()
+        viewModel { TodoMainViewModel(taskDatabase) }
+    val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(true) {
         viewModel.getTodoList()
     }
 
-    if (loading) {
+    if (uiState.isLoading) {
         Dialog(
             onDismissRequest = {}
         ) {
@@ -87,7 +84,7 @@ fun TodoMainScreen(
             item {
                 Text(text = "Todo Task", style = MaterialTheme.typography.titleLarge)
             }
-            items(todoList, key = { todo -> todo.id ?: todo.title }) {
+            items(uiState.taskList, key = { todo -> todo.id ?: todo.title }) {
                 TodoTaskItem(
                     isCheck = it.isCheck,
                     titleText = it.title,

@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -27,29 +26,21 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.baimon.kmp.data.database.TaskDatabase
-import org.baimon.kmp.domain.task.usecase.AddTaskUseCase
+import org.baimon.kmp.database.TaskDatabase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTaskScreen(
-    addTaskUseCase: AddTaskUseCase,
+    taskDatabase: TaskDatabase,
     onBack: () -> Unit,
 ) {
 
-    val viewModel: AddTaskViewModel = viewModel { AddTaskViewModel(addTaskUseCase) }
-    val title by viewModel.title.collectAsState()
-    val description by viewModel.description.collectAsState()
-    val isInputComplete by viewModel.isInputComplete.collectAsState()
-    val back by viewModel.back.collectAsState()
+    val viewModel: AddTaskViewModel = viewModel { AddTaskViewModel(taskDatabase) }
+    val uiState by viewModel.uiState.collectAsState()
     val focusManager = LocalFocusManager.current
 
-    if(back) {
+    if (uiState.backToMainScreen) {
         onBack()
-    }
-
-    LaunchedEffect(title, description) {
-        viewModel.validateField()
     }
 
     Scaffold(
@@ -81,7 +72,7 @@ fun AddTaskScreen(
         ) {
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = title,
+                value = uiState.title,
                 onValueChange = { text ->
                     viewModel.setTitle(text)
                 },
@@ -91,7 +82,7 @@ fun AddTaskScreen(
             )
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = description,
+                value = uiState.description,
                 onValueChange = { text ->
                     viewModel.setDescription(text)
                 },
@@ -105,7 +96,7 @@ fun AddTaskScreen(
                     viewModel.updateTask()
                 },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = isInputComplete
+                enabled = uiState.isInputComplete
             ) {
                 Text(text = "Save")
             }

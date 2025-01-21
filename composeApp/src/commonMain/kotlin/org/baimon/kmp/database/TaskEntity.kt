@@ -1,8 +1,8 @@
-package org.baimon.kmp.data.database
+package org.baimon.kmp.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.baimon.kmp.domain.task.model.Task
+import org.baimon.kmp.model.Task
 
 @Entity(tableName = "task")
 data class TaskEntity(
@@ -12,7 +12,7 @@ data class TaskEntity(
     val isCheck: Boolean
 )
 
-fun TaskEntity.mapToDomain(): Task {
+fun TaskEntity.mapToModel(): Task {
     return Task(
         id = id,
         title = title,

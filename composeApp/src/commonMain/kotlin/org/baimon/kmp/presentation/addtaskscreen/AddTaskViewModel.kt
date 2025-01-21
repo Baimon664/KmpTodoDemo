@@ -5,58 +5,80 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.baimon.kmp.domain.task.model.Task
-import org.baimon.kmp.domain.task.usecase.AddTaskUseCase
+import org.baimon.kmp.database.TaskDatabase
+import org.baimon.kmp.model.Task
+import org.baimon.kmp.model.mapToEntity
 
 class AddTaskViewModel(
-    private val addTaskUseCase: AddTaskUseCase
+    private val taskDatabase: TaskDatabase
 ) : ViewModel() {
-    private val _title = MutableStateFlow<String>("")
-    val title: StateFlow<String> = _title.asStateFlow()
-
-    private val _description = MutableStateFlow<String>("")
-    val description: StateFlow<String> = _description.asStateFlow()
-
-    private val _isInputComplete = MutableStateFlow<Boolean>(false)
-    val isInputComplete: StateFlow<Boolean> = _isInputComplete.asStateFlow()
-
-    private val _back = MutableStateFlow<Boolean>(false)
-    val back: StateFlow<Boolean> = _back.asStateFlow()
+    private val _uiState = MutableStateFlow(
+        AddTaskScreenUiState(
+            title = "",
+            description = "",
+            isInputComplete = false,
+            backToMainScreen = false
+        )
+    )
+    val uiState: StateFlow<AddTaskScreenUiState>
+        get() = _uiState
 
     fun setTitle(newText: String) {
-        _title.value = newText
+        _uiState.update { currentState ->
+            currentState.copy(
+                title = newText
+            )
+        }
+        validateField()
     }
 
     fun setDescription(newText: String) {
-        _description.value = newText
+        _uiState.update { currentState ->
+            currentState.copy(
+                description = newText
+            )
+        }
+        validateField()
     }
 
     private fun isTitleValid(): Boolean {
-        return _title.value.isNotBlank()
+        return _uiState.value.title.isNotBlank()
     }
 
     private fun isDescriptionValid(): Boolean {
-        return _description.value.isNotBlank()
+        return _uiState.value.description.isNotBlank()
     }
 
-    fun validateField() {
-        _isInputComplete.value = isTitleValid() && isDescriptionValid()
+    private fun validateField() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isInputComplete = isTitleValid() && isDescriptionValid()
+            )
+        }
     }
 
     fun updateTask() {
         viewModelScope.launch {
             flowOf(
-                addTaskUseCase.execute(
+                taskDatabase.taskDao().insertTask(
                     Task(
-                        title = _title.value,
-                        description = _description.value,
+                        title = _uiState.value.title,
+                        description = _uiState.value.description,
                         isCheck = false
-                    )
+                    ).mapToEntity()
                 )
-            ).collect {
-                _back.value = true
+            ).catch {
+
+            }.collect {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        backToMainScreen = true
+                    )
+                }
             }
         }
     }
