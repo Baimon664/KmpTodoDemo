@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.baimon.kmp.database.TaskDatabase
 import org.baimon.kmp.presentation.widgets.TodoTaskItem
@@ -40,24 +41,10 @@ fun TodoMainScreen(
 
     val viewModel: TodoMainViewModel =
         viewModel { TodoMainViewModel(taskDatabase) }
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
         viewModel.getTodoList()
-    }
-
-    if (uiState.isLoading) {
-        Dialog(
-            onDismissRequest = {}
-        ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                CircularProgressIndicator(color = Color.Cyan)
-            }
-        }
     }
 
     Scaffold(
