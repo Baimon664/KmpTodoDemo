@@ -10,7 +10,6 @@ import kotlinx.serialization.Serializable
 import org.baimon.kmp.data.database.TaskDatabase
 import org.baimon.kmp.data.database.getDatabase
 import org.baimon.kmp.data.task.TaskRepositoryImpl
-import org.baimon.kmp.domain.task.model.Task
 import org.baimon.kmp.domain.task.usecase.AddTaskUseCase
 import org.baimon.kmp.domain.task.usecase.GetAllTaskUseCase
 import org.baimon.kmp.domain.task.usecase.UpdateCheckTaskUseCase
