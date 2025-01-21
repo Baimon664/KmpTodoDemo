@@ -8,8 +8,6 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
 
-    alias(libs.plugins.room)
-    alias(libs.plugins.ksp)
     kotlin("plugin.serialization") version "2.1.0"
 }
 
@@ -50,8 +48,6 @@ kotlin {
             implementation(libs.lifecycle.viewmodel.compose)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.navigation.compose)
-            implementation(libs.room.runtime)
-            implementation(libs.sqlite.bundled)
         }
     }
 }
@@ -83,12 +79,7 @@ android {
     }
 }
 
-room {
-    schemaDirectory("$projectDir/schemas")
-}
-
 dependencies {
     debugImplementation(compose.uiTooling)
-    ksp(libs.room.compiler)
 }
 
