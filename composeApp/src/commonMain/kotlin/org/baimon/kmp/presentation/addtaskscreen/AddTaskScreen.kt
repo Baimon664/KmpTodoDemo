@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,9 +34,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.baimon.kmp.TaskItem
-import org.baimon.kmp.data.database.TaskDatabase
-import org.baimon.kmp.domain.task.usecase.AddTaskUseCase
-import org.baimon.kmp.presentation.widgets.TodoTaskItem
+import org.baimon.kmp.database.TaskDatabase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

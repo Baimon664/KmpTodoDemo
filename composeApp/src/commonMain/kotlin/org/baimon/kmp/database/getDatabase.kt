@@ -1,4 +1,4 @@
-package org.baimon.kmp.data.database
+package org.baimon.kmp.database
 
 import androidx.room.RoomDatabase
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver

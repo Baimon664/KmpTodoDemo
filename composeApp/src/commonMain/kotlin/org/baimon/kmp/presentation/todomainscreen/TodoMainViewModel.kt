@@ -4,49 +4,59 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.baimon.kmp.domain.task.model.Task
-import org.baimon.kmp.domain.task.usecase.GetAllTaskUseCase
-import org.baimon.kmp.domain.task.usecase.UpdateCheckTaskUseCase
+import org.baimon.kmp.database.TaskDatabase
+import org.baimon.kmp.database.mapToModel
 
 class TodoMainViewModel(
-    private val getAllTaskUseCase: GetAllTaskUseCase,
-    private val updateCheckTaskUseCase: UpdateCheckTaskUseCase
+    private val taskDatabase: TaskDatabase
 ) : ViewModel() {
 
-    private var _todoList = MutableStateFlow(listOf<Task>())
-    val todoList: StateFlow<List<Task>> = _todoList.asStateFlow()
-
-    private var _loading = MutableStateFlow(false)
-    val loading: StateFlow<Boolean> = _loading.asStateFlow()
+    private var _uiState = MutableStateFlow(
+        TodoMainScreenUiState(
+            taskList = listOf()
+        )
+    )
+    val uiState: StateFlow<TodoMainScreenUiState>
+        get() = _uiState
 
     fun getTodoList() {
         viewModelScope.launch {
-            getAllTaskUseCase.execute(Unit)
-                .onStart {
-                    _loading.value = true
-                }
-                .onCompletion {
-                    _loading.value = false
-                }
-                .collect {
-                    _todoList.value = it
+            flowOf(taskDatabase.taskDao().getAllTask())
+                .map {
+                    it.map { entity -> entity.mapToModel() }
+                }.catch {
+
+                }.collect {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            taskList = it
+                        )
+                    }
                 }
         }
     }
 
     fun check(id: Int, isCheck: Boolean) {
         viewModelScope.launch {
-            updateCheckTaskUseCase.execute(Pair(id, isCheck)).collect {
-                val current = _todoList.value.first { it.id == id }
-                val expect = current.copy(isCheck = isCheck)
-                _todoList.value = _todoList.value.map {
-                    if (it.id == id) expect else it
+            flowOf(taskDatabase.taskDao().updateCheckById(id, isCheck))
+                .catch {
+
+                }.collect {
+                    _uiState.update { currentState ->
+                        val current = currentState.taskList.first { it.id == id }
+                        val expect = current.copy(isCheck = isCheck)
+                        currentState.copy(
+                            taskList = currentState.taskList.map {
+                                if (it.id == id) expect else it
+                            }
+                        )
+                    }
                 }
-            }
         }
     }
 }

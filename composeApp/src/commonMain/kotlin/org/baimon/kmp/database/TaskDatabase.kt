@@ -1,4 +1,4 @@
-package org.baimon.kmp.data.database
+package org.baimon.kmp.database
 
 import androidx.room.ConstructedBy
 import androidx.room.Database

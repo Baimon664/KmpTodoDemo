@@ -37,12 +37,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kmpdemo1.composeapp.generated.resources.Res
 import org.baimon.kmp.TaskData
 import org.baimon.kmp.TaskItem
-import org.baimon.kmp.domain.task.usecase.GetAllTaskUseCase
-import org.baimon.kmp.domain.task.usecase.UpdateCheckTaskUseCase
+import org.baimon.kmp.database.TaskDatabase
 import org.baimon.kmp.presentation.widgets.TodoTaskItem
 import kotlin.reflect.KProperty
 
