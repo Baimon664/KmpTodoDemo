@@ -26,6 +26,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
@@ -42,8 +45,8 @@ fun AddTaskScreen(
     onNavigate: (TaskItem) -> Unit,
     onBack:() -> Unit
 ) {
-    var title: String = ""
-    var description: String = ""
+    var title by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -71,7 +74,7 @@ fun AddTaskScreen(
                 modifier = Modifier.fillMaxWidth(),
                 value = title,
                 onValueChange = { text ->
-//                    viewModel.setTitle(text)
+                    title = text
                 },
                 label = {
                     Text(text = "Title")
@@ -81,7 +84,7 @@ fun AddTaskScreen(
                 modifier = Modifier.fillMaxWidth(),
                 value = description,
                 onValueChange = { text ->
-//                    viewModel.setDescription(text)
+                    description = text
                 },
                 label = {
                     Text(text = "Description")

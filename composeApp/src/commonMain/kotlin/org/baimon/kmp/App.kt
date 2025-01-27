@@ -2,6 +2,8 @@ package org.baimon.kmp
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -26,12 +28,15 @@ fun App(
     MaterialTheme {
         val navController = rememberNavController()
         val taskData: TaskData = TaskData()
+
         NavHost(navController, MainScreen) {
+
             composable<MainScreen> {
                 TodoMainScreen(
                     onNavigateToNewTask = {
                         navController.navigate(NewTask)
                     },
+                    onCheck = { },
                     input = taskData
                 )
             }
@@ -57,14 +62,16 @@ object MainScreen
 @Serializable
 object NewTask
 
-
-class TaskData {
+class TaskData : ViewModel() {
     var taskList: ArrayList<TaskItem> = arrayListOf()
     init {
         taskList.add( TaskItem(title = "Task1", description = "It Task1",isCheck = false) )
     }
     fun addTask(newItem: TaskItem) {
         taskList.add(newItem)
+    }
+    fun updateTask(task: TaskItem) {
+        TODO()
     }
 }
 data class TaskItem (

@@ -40,6 +40,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kmpdemo1.composeapp.generated.resources.Res
 import org.baimon.kmp.TaskData
+import org.baimon.kmp.TaskItem
 import org.baimon.kmp.domain.task.usecase.GetAllTaskUseCase
 import org.baimon.kmp.domain.task.usecase.UpdateCheckTaskUseCase
 import org.baimon.kmp.presentation.widgets.TodoTaskItem
@@ -51,6 +52,7 @@ var list = arrayOf("a","b","c")
 @Composable
 fun TodoMainScreen(
     onNavigateToNewTask: () -> Unit,
+    onCheck: (TaskItem) -> Unit,
     input: TaskData
 ) {
     var stateList by remember { mutableStateOf( list ) }
@@ -83,8 +85,8 @@ fun TodoMainScreen(
             items(input.taskList) {
                 TodoTaskItem(
                     item = it,
-                    onCheck = {
-
+                    onCheck = { output ->
+                        onCheck( output )
                     }
                 )
             }
