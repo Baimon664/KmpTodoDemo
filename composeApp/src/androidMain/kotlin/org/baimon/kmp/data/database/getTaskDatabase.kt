@@ -13,7 +13,4 @@ fun getTaskDatabaseBuilder(ctx: Context): RoomDatabase.Builder<TaskDatabase> {
         context = appContext,
         name = dbFile.absolutePath
     )
-//        .setDriver(BundledSQLiteDriver())
-//        .setQueryCoroutineContext(Dispatchers.IO)
-//        .build()
 }

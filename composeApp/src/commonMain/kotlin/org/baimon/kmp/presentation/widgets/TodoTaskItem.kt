@@ -12,22 +12,16 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import org.baimon.kmp.TaskItem
+import org.baimon.kmp.domain.model.Task
 
 @Composable
 fun TodoTaskItem(
-    item: TaskItem,
-    onCheck: (TaskItem)-> Unit
+    item: Task,
+    onCheck: (task: Task, isCheck: Boolean)-> Unit
 ) {
-    var isCheck by remember { mutableStateOf(false) }
-    isCheck = item.isCheck
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
@@ -45,10 +39,8 @@ fun TodoTaskItem(
                 Text(text = item.title, style = MaterialTheme.typography.titleMedium)
                 Text(text = item.description, style = MaterialTheme.typography.bodyMedium)
             }
-            Checkbox(checked = isCheck, onCheckedChange = {
-                isCheck = !isCheck
-                item.isCheck = isCheck
-                onCheck(item)
+            Checkbox(checked = item.isCheck, onCheckedChange = {
+                onCheck(item, !item.isCheck)
             })
         }
     }

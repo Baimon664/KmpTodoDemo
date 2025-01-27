@@ -2,7 +2,7 @@ package org.baimon.kmp.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.baimon.kmp.domain.task.model.Task
+import org.baimon.kmp.domain.model.Task
 
 @Entity(tableName = "task")
 data class TaskEntity(

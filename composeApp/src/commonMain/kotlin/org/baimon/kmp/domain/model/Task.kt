@@ -1,9 +1,9 @@
-package org.baimon.kmp.domain.task.model
+package org.baimon.kmp.domain.model
 
 import org.baimon.kmp.data.database.TaskEntity
 
 data class Task(
-    val id: Int? = null,
+    val id: Int,
     val title: String,
     val description: String,
     val isCheck: Boolean,
