@@ -57,7 +57,7 @@ object MainScreen
 @Serializable
 object NewTask
 
-class TaskData : ViewModel() {
+class TaskData  {
     var taskList: ArrayList<TaskItem> = arrayListOf()
     init {
         taskList.add( TaskItem(title = "Task1", description = "It Task1",isCheck = false) )
