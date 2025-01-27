@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 import org.baimon.kmp.data.database.TaskDatabase
 import org.baimon.kmp.data.database.getDatabase
 import org.baimon.kmp.data.task.TaskRepositoryImpl
+import org.baimon.kmp.domain.task.model.Task
 import org.baimon.kmp.domain.task.usecase.AddTaskUseCase
 import org.baimon.kmp.domain.task.usecase.GetAllTaskUseCase
 import org.baimon.kmp.domain.task.usecase.UpdateCheckTaskUseCase
@@ -24,42 +25,23 @@ fun App(
 ) {
     MaterialTheme {
         val navController = rememberNavController()
-
-        val taskDatabase = remember {
-            getDatabase(taskDatabaseBuilder)
-        }
-
-        val taskRepository = remember {
-            TaskRepositoryImpl(
-                taskDatabase
-            )
-        }
-
-        val getAllTaskUseCase = remember {
-            GetAllTaskUseCase(taskRepository)
-        }
-
-        val updateCheckTaskUseCase = remember {
-            UpdateCheckTaskUseCase(taskRepository)
-        }
-
-        val addTaskUseCase = remember {
-            AddTaskUseCase(taskRepository)
-        }
-
+        val taskData: TaskData = TaskData()
         NavHost(navController, MainScreen) {
             composable<MainScreen> {
                 TodoMainScreen(
-                    getAllTaskUseCase = getAllTaskUseCase,
-                    updateCheckTaskUseCase = updateCheckTaskUseCase,
                     onNavigateToNewTask = {
                         navController.navigate(NewTask)
-                    }
+                    },
+                    input = taskData
                 )
             }
+
             composable<NewTask> {
                 AddTaskScreen(
-                    addTaskUseCase = addTaskUseCase,
+                    onNavigate = { newTask ->
+                        taskData.addTask(newTask)
+                        navController.popBackStack()
+                    },
                     onBack = {
                         navController.popBackStack()
                     }
@@ -74,3 +56,20 @@ object MainScreen
 
 @Serializable
 object NewTask
+
+
+class TaskData {
+    var taskList: ArrayList<TaskItem> = arrayListOf()
+    init {
+        taskList.add( TaskItem(title = "Task1", description = "It Task1",isCheck = false) )
+    }
+    fun addTask(newItem: TaskItem) {
+        taskList.add(newItem)
+    }
+}
+data class TaskItem (
+    val id: String = "1",
+    val title: String,
+    val description: String,
+    var isCheck: Boolean
+)
