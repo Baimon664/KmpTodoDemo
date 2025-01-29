@@ -26,7 +26,7 @@ import org.baimon.kmp.TaskData
 import org.baimon.kmp.TaskItem
 
 
-var tableItem = listOf("item1","item2","item3")
+var tableItem = listOf("a","b","c")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoMainScreen(
