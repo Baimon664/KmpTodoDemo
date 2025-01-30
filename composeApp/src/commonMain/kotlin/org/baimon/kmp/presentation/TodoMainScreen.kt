@@ -1,6 +1,7 @@
 package org.baimon.kmp.presentation
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.baimon.kmp.TaskData
 import org.baimon.kmp.TaskItem
-
 
 var tableItem = listOf("a","b","c")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,7 +56,7 @@ fun TodoMainScreen(
     {
         innerPadder ->
         LazyColumn(
-            modifier = Modifier.padding( innerPadder ),
+            modifier = Modifier.fillMaxSize().padding( innerPadder ).padding(16.dp),
             verticalArrangement = Arrangement.spacedBy( 16.dp )
         ) {
             items( taskData.tableItem ) {

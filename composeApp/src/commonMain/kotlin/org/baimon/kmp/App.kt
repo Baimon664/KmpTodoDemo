@@ -1,6 +1,7 @@
 package org.baimon.kmp
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
@@ -20,7 +21,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun App(
 ) {
     MaterialTheme {
-        val taskData = viewModel { TaskData() }
+        val taskData = TaskData()
+
         val navControl = rememberNavController()
         NavHost( navControl , Mainscreen ) {
             composable<Mainscreen> {
@@ -37,10 +39,8 @@ fun App(
             composable<NewTask> {
                 AddTaskScreen( onNavigate = { newItem ->
                     taskData.addTask(newItem)
-//                    navControl.popBackStack()
                     navControl.navigateUp()
                 }, onBack = {
-//                    navControl.popBackStack()
                     navControl.navigateUp()
                 } )
             }
